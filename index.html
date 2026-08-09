@@ -1,26 +1,22 @@
-document.createElement("a");
-
-link.href =
-URL.createObjectURL(blob);
-
-link.download =
-"Balaji-Digital-Hub-Product.txt";
-
-link.click();
-
+showPage(4);
 }
 
+function downloadProduct(){
+let text="Balaji Digital Hub\nSecure Digital Product\nOrder ID: "+orderId+"\nThank you for your purchase.";
+let blob=new Blob([text],{type:"text/plain"});
+let link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download="Balaji-Digital-Hub-Product.txt";
+link.click();
+}
 
 function showInvoice(){
-
 showPage(6);
-
 }
-
 </script>
 
 </body>
 </html>
-बहुत बढ़िया 👍
-अब नीचे वाला पूरा code copy करके GitHub के बड़े code box में paste कर दीजिए।
+बिल्कुल 👍 अब नीचे का पूरा code copy करके GitHub के खाली code box में paste करें।
+⚠️ ध्यान रखें: सिर्फ <!DOCTYPE html> से लेकर </html> तक का code copy करना है। उसके बाहर की कोई बात copy नहीं करनी है।
 HTML
