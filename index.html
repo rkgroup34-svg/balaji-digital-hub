@@ -1,22 +1,233 @@
-showPage(4);
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaji Digital Hub V5</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f7fb;
+color:#222;
 }
 
-function downloadProduct(){
-let text="Balaji Digital Hub\nSecure Digital Product\nOrder ID: "+orderId+"\nThank you for your purchase.";
-let blob=new Blob([text],{type:"text/plain"});
-let link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
-link.download="Balaji-Digital-Hub-Product.txt";
-link.click();
+.container{
+max-width:520px;
+margin:auto;
+padding:18px;
 }
 
-function showInvoice(){
-showPage(6);
+.card{
+background:#fff;
+padding:20px;
+margin:15px 0;
+border-radius:18px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
 }
-</script>
 
-</body>
-</html>
-बिल्कुल 👍 अब नीचे का पूरा code copy करके GitHub के खाली code box में paste करें।
-⚠️ ध्यान रखें: सिर्फ <!DOCTYPE html> से लेकर </html> तक का code copy करना है। उसके बाहर की कोई बात copy नहीं करनी है।
-HTML
+h1,h2{margin-top:0}
+
+.price{
+font-size:30px;
+font-weight:bold;
+}
+
+.old{
+color:#888;
+text-decoration:line-through;
+margin-right:8px;
+}
+
+.discount{
+display:inline-block;
+background:#e8f7ee;
+color:#16833b;
+padding:6px 10px;
+border-radius:20px;
+font-weight:bold;
+}
+
+button{
+width:100%;
+padding:14px;
+border:0;
+border-radius:12px;
+background:#1769e0;
+color:white;
+font-size:17px;
+font-weight:bold;
+margin-top:12px;
+}
+
+input{
+width:100%;
+padding:13px;
+margin:7px 0;
+border:1px solid #d6dbe3;
+border-radius:10px;
+font-size:16px;
+}
+
+.page{
+display:none;
+}
+
+.page.active{
+display:block;
+}
+
+.center{
+text-align:center;
+}
+
+.upi{
+font-size:20px;
+font-weight:bold;
+word-break:break-all;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #eee;
+}
+
+.total{
+font-weight:bold;
+font-size:19px;
+}
+
+.success{
+font-size:50px;
+}
+
+.invoice{
+border:1px solid #ddd;
+padding:15px;
+border-radius:12px;
+}
+
+.small{
+color:#777;
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="page1" class="page active">
+<div class="card">
+<h1>Balaji Digital Hub</h1>
+<p>Digital Product</p>
+
+<p>
+<span class="old">₹99</span>
+<span class="price">₹39</span>
+</p>
+
+<span class="discount">₹60 Discount</span>
+
+<button onclick="showPage(2)">Buy Now</button>
+</div>
+</div>
+
+
+<div id="page2" class="page">
+<div class="card">
+
+<h2>Checkout</h2>
+
+<div class="row">
+<span>Product</span>
+<b>Digital Product</b>
+</div>
+
+<div class="row">
+<span>Original Price</span>
+<span>₹99</span>
+</div>
+
+<div class="row">
+<span>Discount</span>
+<span>₹60</span>
+</div>
+
+<div class="row total">
+<span>Payable</span>
+<span>₹39</span>
+</div>
+
+<h3>Customer Details</h3>
+
+<input id="name" placeholder="Name">
+
+<input id="email" type="email" placeholder="Email">
+
+<input id="mobile" inputmode="numeric" placeholder="Mobile Number">
+
+<button onclick="continuePayment()">Continue</button>
+
+</div>
+</div>
+
+
+<div id="page3" class="page">
+<div class="card center">
+
+<h2>UPI Payment</h2>
+
+<p>Payable Amount</p>
+
+<div class="price">₹39</div>
+
+<p>UPI ID</p>
+
+<div class="upi">7976081397@ybl</div>
+
+<p class="small">
+UPI app खोलकर payment करें।
+</p>
+
+<a id="upiButton" href="#">
+<button>Pay ₹39 by UPI</button>
+</a>
+
+<button onclick="paymentSuccess()">
+Payment Done / Continue
+</button>
+
+</div>
+</div>
+
+
+<div id="page4" class="page">
+<div class="card center">
+
+<div class="success">✓</div>
+
+<h2>Payment Successful</h2>
+
+<p>Payment successful.</p>
+
+<p>
+<b>Order ID:</b>
+<span id="orderId"></span>
+</p>
+
+<button onclick="showPage(5)">
+Secure Download
+</button>
+
+</div>
+</div>
+
+
+<div id="
