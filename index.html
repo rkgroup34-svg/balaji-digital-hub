@@ -228,6 +228,77 @@ Secure Download
 
 </div>
 </div>
+<div id="page5" class="page">
+<div class="card">
 
+<h2>Secure Download</h2>
 
-<div id="
+<p>Your digital product is ready.</p>
+
+<button onclick="downloadProduct()">Download Product</button>
+
+<button onclick="showPage(6)">GST Invoice</button>
+
+</div>
+</div>
+<div id="page6" class="page">
+<div class="card">                                                   
+  <h2>GST Invoice</h2>
+  <div class="invoice">
+    <h3>Balaji Digital Hub</h3>
+    <p>Digital Product Store</p>
+    <hr>
+    <p>Customer Name:
+      <span id="invoiceName"></span>
+      </p>
+      Original Price: ₹99</p>
+<p>Testing Price: ₹1</p>
+
+<p>
+<b>Total Paid: ₹1</b>
+</p>
+
+<p class="small">
+Demo invoice for testing.
+</p>
+
+</div>
+
+<button onclick="downloadInvoice()">
+Download GST Invoice
+</button>
+
+<button onclick="showPage(1)">
+Back to Home
+</button>
+
+</div>
+</div>
+हाँ, <script>
+
+function downloadProduct(){
+alert("Demo product download started.");
+}
+
+function downloadInvoice(){
+alert("Demo GST Invoice download started.");
+}
+document.getElementById("orderId").innerText=order;
+
+document.getElementById("invoiceName").innerText=
+document.getElementById("name").value;
+
+document.getElementById("invoiceEmail").innerText=
+document.getElementById("email").value;
+
+document.getElementById("invoiceMobile").innerText=
+document.getElementById("mobile").value;
+
+document.getElementById("invoiceOrder").innerText=order;
+
+showPage(4);
+}
+</script>
+
+</body>
+</html>
