@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balaji Digital Hub V5</title>
+
+<title>Balaji Digital Hub</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
@@ -21,54 +24,66 @@ margin:auto;
 padding:18px;
 }
 
-.card{
-background:#fff;
-padding:20px;
-margin:15px 0;
+.header{
+background:#111827;
+color:white;
+padding:22px;
 border-radius:18px;
-box-shadow:0 4px 18px rgba(0,0,0,.08);
+text-align:center;
 }
 
-h1,h2{margin-top:0}
+.header h1{
+margin:0 0 8px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-top:18px;
+border-radius:18px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
 
 .price{
 font-size:30px;
 font-weight:bold;
+margin:10px 0;
 }
 
 .old{
 color:#888;
 text-decoration:line-through;
+font-size:18px;
 margin-right:8px;
 }
 
-.discount{
-display:inline-block;
-background:#e8f7ee;
+.offer{
 color:#16833b;
-padding:6px 10px;
-border-radius:20px;
 font-weight:bold;
 }
 
 button{
 width:100%;
 padding:14px;
+margin-top:12px;
 border:0;
-border-radius:12px;
-background:#1769e0;
+border-radius:10px;
+background:#2563eb;
 color:white;
 font-size:17px;
 font-weight:bold;
-margin-top:12px;
+}
+
+button.secondary{
+background:#111827;
 }
 
 input{
 width:100%;
 padding:13px;
-margin:7px 0;
-border:1px solid #d6dbe3;
-border-radius:10px;
+margin-top:10px;
+border:1px solid #ccc;
+border-radius:9px;
 font-size:16px;
 }
 
@@ -80,41 +95,43 @@ display:none;
 display:block;
 }
 
-.center{
+.success{
 text-align:center;
+color:#16833b;
+font-weight:bold;
+font-size:22px;
 }
 
-.upi{
-font-size:20px;
-font-weight:bold;
-word-break:break-all;
+.order{
+background:#eef4ff;
+padding:15px;
+border-radius:10px;
+margin-top:15px;
+}
+
+.invoice{
+border:2px solid #222;
+padding:18px;
+margin-top:15px;
+background:white;
+}
+
+.invoice h2{
+text-align:center;
 }
 
 .row{
 display:flex;
 justify-content:space-between;
-padding:8px 0;
-border-bottom:1px solid #eee;
-}
-
-.total{
-font-weight:bold;
-font-size:19px;
-}
-
-.success{
-font-size:50px;
-}
-
-.invoice{
-border:1px solid #ddd;
-padding:15px;
-border-radius:12px;
+padding:6px 0;
+border-bottom:1px solid #ddd;
 }
 
 .small{
-color:#777;
 font-size:13px;
+color:#666;
+margin-top:12px;
+text-align:center;
 }
 </style>
 </head>
@@ -123,35 +140,223 @@ font-size:13px;
 
 <div class="container">
 
+<!-- HOME -->
 <div id="page1" class="page active">
+
+<div class="header">
+<h1>🙏 Balaji Digital Hub</h1>
+<p>Digital Products & Business Templates</p>
+</div>
+
 <div class="card">
-<h1>Balaji Digital Hub</h1>
-<p>Digital Product</p>
+
+<h2>Premium GST Invoice Template</h2>
 
 <p>
 <span class="old">₹99</span>
 <span class="price">₹39</span>
 </p>
 
-<span class="discount">₹60 Discount</span>
+<p class="offer">🔥 Launch Offer</p>
 
-<button onclick="showPage(2)">Buy Now</button>
+<p>
+Professional editable GST Invoice Template.
+Business owners ke liye easy to use digital product.
+</p>
+
+<button onclick="showPage(2)">
+Buy Now
+</button>
+
 </div>
+
 </div>
 
 
+<!-- CHECKOUT -->
 <div id="page2" class="page">
+
+<div class="header">
+<h1>Checkout</h1>
+<p>Customer Details</p>
+</div>
+
 <div class="card">
 
-<h2>Checkout</h2>
+<h2>Order Summary</h2>
 
 <div class="row">
 <span>Product</span>
-<b>Digital Product</b>
+<strong>GST Invoice Template</strong>
 </div>
 
 <div class="row">
-<span>Original Price</span>
+<span>Regular Price</span>
+<span>₹99</span>
+</div>
+
+<div class="row">
+<span>Discount</span>
+<span>-₹60</span>
+</div>
+
+<div class="row">
+<strong>Total</strong>
+<strong>₹39</strong>
+</div>
+
+<h3>Your Details</h3>
+
+<input id="name" type="text" placeholder="Full Name">
+
+<input id="email" type="email" placeholder="Email">
+
+<input id="mobile" type="tel" placeholder="Mobile Number">
+
+<button onclick="continuePayment()">
+Continue to Payment
+</button>
+
+<button class="secondary" onclick="showPage(1)">
+Back to Home
+</button>
+
+</div>
+
+</div>
+
+
+<!-- PAYMENT -->
+<div id="page3" class="page">
+
+<div class="header">
+<h1>Payment</h1>
+<p>Secure Demo Payment</p>
+</div>
+
+<div class="card">
+
+<h2>Payment Amount</h2>
+
+<div class="price">₹1</div>
+
+<p>
+अभी testing के लिए ₹1 रखा गया है।
+Final launch पर इसे ₹39 किया जाएगा।
+</p>
+
+<div class="order">
+<strong>UPI ID</strong><br>
+7976081397@ybl
+</div>
+
+<button onclick="paymentSuccess()">
+I Have Paid ₹1
+</button>
+
+<button class="secondary" onclick="showPage(2)">
+Back
+</button>
+
+</div>
+
+</div>
+
+
+<!-- SUCCESS -->
+<div id="page4" class="page">
+
+<div class="header">
+<h1>Payment Successful</h1>
+</div>
+
+<div class="card">
+
+<div class="success">
+✓ Payment Successful
+</div>
+
+<div class="order">
+
+<p>
+<strong>Order ID:</strong>
+<span id="orderId"></span>
+</p>
+
+<p>
+<strong>Name:</strong>
+<span id="successName"></span>
+</p>
+
+<p>
+<strong>Email:</strong>
+<span id="successEmail"></span>
+</p>
+
+<p>
+<strong>Mobile:</strong>
+<span id="successMobile"></span>
+</p>
+
+</div>
+
+<button onclick="downloadProduct()">
+Secure Download
+</button>
+
+<button class="secondary" onclick="showInvoice()">
+View GST Invoice
+</button>
+
+</div>
+
+</div>
+
+
+<!-- INVOICE -->
+<div id="page5" class="page">
+
+<div class="header">
+<h1>GST Invoice</h1>
+</div>
+
+<div class="card">
+
+<div class="invoice">
+
+<h2>Balaji Digital Hub</h2>
+
+<p><strong>GST Invoice / Purchase Receipt</strong></p>
+
+<hr>
+
+<div class="row">
+<span>Order ID</span>
+<span id="invoiceOrder"></span>
+</div>
+
+<div class="row">
+<span>Customer Name</span>
+<span id="invoiceName"></span>
+</div>
+
+<div class="row">
+<span>Email</span>
+<span id="invoiceEmail"></span>
+</div>
+
+<div class="row">
+<span>Mobile</span>
+<span id="invoiceMobile"></span>
+</div>
+
+<div class="row">
+<span>Product</span>
+<span>GST Invoice Template</span>
+</div>
+
+<div class="row">
+<span>Regular Price</span>
 <span>₹99</span>
 </div>
 
@@ -160,130 +365,92 @@ font-size:13px;
 <span>₹60</span>
 </div>
 
-<div class="row total">
-<span>Payable</span>
-<span>₹39</span>
+<div class="row">
+<strong>Paid Amount</strong>
+<strong>₹39</strong>
 </div>
-
-<h3>Customer Details</h3>
-
-<input id="name" placeholder="Name">
-
-<input id="email" type="email" placeholder="Email">
-
-<input id="mobile" inputmode="numeric" placeholder="Mobile Number">
-
-<button onclick="continuePayment()">Continue</button>
-
-</div>
-</div>
-
-
-<div id="page3" class="page">
-<div class="card center">
-
-<h2>UPI Payment</h2>
-
-<p>Payable Amount</p>
-
-<div class="price">₹39</div>
-
-<p>UPI ID</p>
-
-<div class="upi">7976081397@ybl</div>
 
 <p class="small">
-UPI app खोलकर payment करें।
-</p>
-
-<a id="upiButton" href="#">
-<button>Pay ₹39 by UPI</button>
-</a>
-
-<button onclick="paymentSuccess()">
-Payment Done / Continue
-</button>
-
-</div>
-</div>
-
-
-<div id="page4" class="page">
-<div class="card center">
-
-<div class="success">✓</div>
-
-<h2>Payment Successful</h2>
-
-<p>Payment successful.</p>
-
-<p>
-<b>Order ID:</b>
-<span id="orderId"></span>
-</p>
-
-<button onclick="showPage(5)">
-Secure Download
-</button>
-
-</div>
-</div>
-<div id="page5" class="page">
-<div class="card">
-
-<h2>Secure Download</h2>
-
-<p>Your digital product is ready.</p>
-
-<button onclick="downloadProduct()">Download Product</button>
-
-<button onclick="showPage(6)">GST Invoice</button>
-
-</div>
-</div>
-<div id="page6" class="page">
-<div class="card">                                                   
-  <h2>GST Invoice</h2>
-  <div class="invoice">
-    <h3>Balaji Digital Hub</h3>
-    <p>Digital Product Store</p>
-    <hr>
-    <p>Customer Name:
-      <span id="invoiceName"></span>
-      </p>
-      Original Price: ₹99</p>
-<p>Testing Price: ₹1</p>
-
-<p>
-<b>Total Paid: ₹1</b>
-</p>
-
-<p class="small">
-Demo invoice for testing.
+This is a demo invoice for testing.
+Actual GST tax breakup will be added in the production version.
 </p>
 
 </div>
 
 <button onclick="downloadInvoice()">
-Download GST Invoice
+Download Invoice
 </button>
 
-<button onclick="showPage(1)">
-Back to Home
+<button class="secondary" onclick="showPage(4)">
+Back
 </button>
 
 </div>
-</div> 
-  <script>
+
+</div>
+
+</div>
+
+
+<script>
+
+let order="";
+
+function showPage(page){
+
+document.querySelectorAll(".page").forEach(function(p){
+p.classList.remove("active");
+});
+
+document.getElementById("page"+page).classList.add("active");
+
+window.scrollTo(0,0);
+}
+
+
+function continuePayment(){
+
+let name=document.getElementById("name").value.trim();
+let email=document.getElementById("email").value.trim();
+let mobile=document.getElementById("mobile").value.trim();
+
+if(name==="" || email==="" || mobile===""){
+alert("Please fill Name, Email and Mobile Number.");
+return;
+}
+
+showPage(3);
+}
+
+
+function paymentSuccess(){
+
+order="BDH-"+Date.now();
+
+document.getElementById("orderId").innerText=order;
+
+document.getElementById("successName").innerText=
+document.getElementById("name").value;
+
+document.getElementById("successEmail").innerText=
+document.getElementById("email").value;
+
+document.getElementById("successMobile").innerText=
+document.getElementById("mobile").value;
+
+showPage(4);
+}
+
 
 function downloadProduct(){
+
 alert("Demo product download started.");
 }
 
-function downloadInvoice(){
-alert("Demo GST Invoice download started.");
-}
-document.getElementById("orderId").innerText=order;
+
+function showInvoice(){
+
+document.getElementById("invoiceOrder").innerText=order;
 
 document.getElementById("invoiceName").innerText=
 document.getElementById("name").value;
@@ -294,10 +461,15 @@ document.getElementById("email").value;
 document.getElementById("invoiceMobile").innerText=
 document.getElementById("mobile").value;
 
-document.getElementById("invoiceOrder").innerText=order;
-
-showPage(4);
+showPage(5);
 }
+
+
+function downloadInvoice(){
+
+alert("Demo GST Invoice download started.");
+}
+
 </script>
 
 </body>
