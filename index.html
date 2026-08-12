@@ -561,12 +561,128 @@ Login
   </p>
 </div>
 
-<div style="background:#fff; padding:15px; margin-bottom:15px; border-radius:10px;">
-<b>📦 Products</b>
-<p style="margin-bottom:0;">
-Product Management – Add, Edit, Price & Offer Management – Coming Next
-</p>
+<div style="background:#fff;padding:15px;margin-bottom:15px;border-radius:10px;">
+<b>📦 Products Management</b>
+
+<div style="margin-top:12px;">
+<input id="productName" placeholder="Product Name"
+style="width:100%;padding:10px;margin-bottom:8px;">
+
+<input id="regularPrice" type="number" placeholder="Regular Price"
+style="width:100%;padding:10px;margin-bottom:8px;">
+
+<input id="offerPrice" type="number" placeholder="Offer Price"
+style="width:100%;padding:10px;margin-bottom:8px;">
+
+<button onclick="addProduct()"
+style="padding:10px 15px;border:0;border-radius:6px;">
+➕ Add Product
+</button>
 </div>
+
+<div id="productList" style="margin-top:15px;"></div>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem("balajiProducts") || "[]");
+
+function saveProducts(){
+localStorage.setItem("balajiProducts", JSON.stringify(products));
+}
+
+function addProduct(){
+let name = document.getElementById("productName").value.trim();
+let regular = document.getElementById("regularPrice").value;
+let offer = document.getElementById("offerPrice").value;
+
+if(!name || !regular || !offer){
+alert("Please fill all product details.");
+return;
+}
+
+products.push({
+id: Date.now(),
+name:name,
+regular:regular,
+offer:offer,
+active:true
+});
+
+saveProducts();
+
+document.getElementById("productName").value="";
+document.getElementById("regularPrice").value="";
+document.getElementById("offerPrice").value="";
+
+showProducts();
+}
+
+function editProduct(id){
+let p = products.find(x => x.id === id);
+
+let name = prompt("Product Name:", p.name);
+if(name === null) return;
+
+let regular = prompt("Regular Price:", p.regular);
+if(regular === null) return;
+
+let offer = prompt("Offer Price:", p.offer);
+if(offer === null) return;
+
+p.name = name;
+p.regular = regular;
+p.offer = offer;
+
+saveProducts();
+showProducts();
+}
+
+function toggleProduct(id){
+let p = products.find(x => x.id === id);
+p.active = !p.active;
+
+saveProducts();
+showProducts();
+}
+
+function deleteProduct(id){
+if(!confirm("Delete this product?")) return;
+
+products = products.filter(x => x.id !== id);
+
+saveProducts();
+showProducts();
+}
+
+function showProducts(){
+let box = document.getElementById("productList");
+
+if(products.length === 0){
+box.innerHTML =
+"<p style='color:#666;'>No products added yet.</p>";
+return;
+}
+
+box.innerHTML = products.map(p => `
+<div style="border:1px solid #ddd;padding:12px;margin-top:10px;border-radius:8px;">
+<b>${p.name}</b><br>
+Regular Price: ₹${p.regular}<br>
+Offer Price: ₹${p.offer}<br>
+Status: ${p.active ? "✅ Active" : "⛔ Inactive"}
+
+<div style="margin-top:8px;">
+<button onclick="editProduct(${p.id})">✏️ Edit</button>
+<button onclick="toggleProduct(${p.id})">
+${p.active ? "⛔ Disable" : "✅ Activate"}
+</button>
+<button onclick="deleteProduct(${p.id})">🗑️ Delete</button>
+</div>
+</div>
+`).join("");
+}
+
+showProducts();
+</script>
 
 <div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
 <b>Customers</b>
