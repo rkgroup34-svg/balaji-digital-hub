@@ -477,5 +477,102 @@ alert("Demo GST Invoice download started.");
   Operated by Rajesh Kumar Sharma<br>
   Digital Products & Services
 </footer>
+
+
+
+  <!--  ADMIN PANEL - POINT 1A -->
+
+<div id="adminPanel" style="display:none; padding:20px; max-width:600px; margin:auto;">
+
+<h2 style="text-align:center;">🔐 Balaji Digital Hub Admin</h2>
+
+<div id="adminLogin" style="background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px #ccc;">
+
+<h3>Admin Login</h3>
+
+<input
+id="adminPassword"
+type="password"
+placeholder="Admin Password"
+style="width:100%; padding:12px; margin:10px 0;"
+>
+
+<button
+onclick="adminLogin()"
+style="width:100%; padding:12px;"
+>
+Login
+</button>
+
+<p id="adminError" style="color:red;"></p>
+
+</div>
+
+
+<div id="adminDashboard" style="display:none;">
+
+<h3>📊 Admin Dashboard</h3>
+
+<div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
+<b>Products</b>
+<p>Product Management — Coming Next</p>
+</div>
+
+<div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
+<b>Customers</b>
+<p>Customer Management — Coming Next</p>
+</div>
+
+<div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
+<b>Orders & Sales</b>
+<p>Orders & Sales — Coming Next</p>
+</div>
+
+<button
+onclick="adminLogout()"
+style="width:100%; padding:12px;"
+>
+Logout
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+function adminLogin(){
+
+let password =
+document.getElementById("adminPassword").value;
+
+if(password === "1234"){
+
+document.getElementById("adminLogin").style.display="none";
+
+document.getElementById("adminDashboard").style.display="block";
+
+}else{
+
+document.getElementById("adminError").innerText =
+"Wrong Admin Password";
+
+}
+
+}
+
+
+function adminLogout(){
+
+document.getElementById("adminDashboard").style.display="none";
+
+document.getElementById("adminLogin").style.display="block";
+
+document.getElementById("adminPassword").value="";
+
+}
+
+</script>
 </body>
 </html>
