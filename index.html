@@ -169,6 +169,48 @@ Buy Now
 </button>
 
 </div>
+  <div id="adminProductsOnHome" style="margin-top:18px;"></div>
+
+<script>
+function showAdminProductsOnHome(){
+
+let box = document.getElementById("adminProductsOnHome");
+let savedProducts = JSON.parse(localStorage.getItem("balajiProducts") || "[]");
+
+let activeProducts = savedProducts.filter(function(p){
+return p.active;
+});
+
+if(activeProducts.length === 0){
+box.innerHTML = "";
+return;
+}
+
+box.innerHTML = activeProducts.map(function(p){
+
+return `
+<div class="card">
+<h2>${p.name}</h2>
+
+<p>
+<span class="old">₹${p.regular}</span>
+<span class="price">₹${p.offer}</span>
+</p>
+
+<p class="offer">🔥 Launch Offer</p>
+
+<button onclick="showPage(2)">
+Buy Now
+</button>
+
+</div>
+`;
+
+}).join("");
+}
+
+showAdminProductsOnHome();
+</script>
 
 </div>
 
