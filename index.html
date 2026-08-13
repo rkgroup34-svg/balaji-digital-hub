@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Balaji Digital Hub</title>
 
 <style>
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
 margin:0;
@@ -123,6 +120,7 @@ text-align:center;
 .row{
 display:flex;
 justify-content:space-between;
+gap:12px;
 padding:6px 0;
 border-bottom:1px solid #ddd;
 }
@@ -133,6 +131,77 @@ color:#666;
 margin-top:12px;
 text-align:center;
 }
+
+.announcement{
+background:#fff7d6;
+color:#7a4b00;
+padding:11px 14px;
+border-radius:10px;
+margin-top:15px;
+font-weight:bold;
+text-align:center;
+}
+
+.admin-wrap{
+display:none;
+padding:20px;
+max-width:600px;
+margin:auto;
+}
+
+.admin-box{
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+box-shadow:0 2px 8px #ddd;
+}
+
+.admin-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin:15px 0;
+}
+
+.admin-stat{
+background:#fff;
+padding:15px;
+border-radius:12px;
+box-shadow:0 2px 8px #ddd;
+}
+
+.product-admin{
+border:1px solid #ddd;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+}
+
+.admin-btn{
+width:auto;
+padding:10px 12px;
+font-size:14px;
+margin-right:5px;
+}
+
+.danger{
+background:#dc2626;
+}
+
+.success-btn{
+background:#16833b;
+}
+
+.muted{
+color:#666;
+}
+
+@media(max-width:380px){
+.admin-grid{
+grid-template-columns:1fr;
+}
+}
 </style>
 </head>
 
@@ -141,20 +210,29 @@ text-align:center;
 <div class="container">
 
 <!-- HOME -->
+
 <div id="page1" class="page active">
 
 <div class="header">
+
 <h1>🙏 Balaji Digital Hub</h1>
+
 <p>Digital Products & Business Templates</p>
+
 </div>
+
+<div id="announcementBar"></div>
 
 <div class="card">
 
 <h2>Premium GST Invoice Template</h2>
 
 <p>
+
 <span class="old">₹99</span>
+
 <span class="price">₹39</span>
+
 </p>
 
 <p class="offer">🔥 Launch Offer</p>
@@ -164,63 +242,27 @@ Professional editable GST Invoice Template.
 Business owners ke liye easy to use digital product.
 </p>
 
-<button onclick="showPage(2)">
+<button onclick="buyProduct('default-gst')">
 Buy Now
 </button>
 
 </div>
-  <div id="adminProductsOnHome" style="margin-top:18px;"></div>
 
-<script>
-function showAdminProductsOnHome(){
-
-let box = document.getElementById("adminProductsOnHome");
-let savedProducts = JSON.parse(localStorage.getItem("balajiProducts") || "[]");
-
-let activeProducts = savedProducts.filter(function(p){
-return p.active;
-});
-
-if(activeProducts.length === 0){
-box.innerHTML = "";
-return;
-}
-
-box.innerHTML = activeProducts.map(function(p){
-
-return `
-<div class="card">
-<h2>${p.name}</h2>
-
-<p>
-<span class="old">₹${p.regular}</span>
-<span class="price">₹${p.offer}</span>
-</p>
-
-<p class="offer">🔥 Launch Offer</p>
-
-<button onclick="showPage(2)">
-Buy Now
-</button>
-
-</div>
-`;
-
-}).join("");
-}
-
-showAdminProductsOnHome();
-</script>
+<div id="adminProductsOnHome"></div>
 
 </div>
 
 
 <!-- CHECKOUT -->
+
 <div id="page2" class="page">
 
 <div class="header">
+
 <h1>Checkout</h1>
+
 <p>Customer Details</p>
+
 </div>
 
 <div class="card">
@@ -228,38 +270,73 @@ showAdminProductsOnHome();
 <h2>Order Summary</h2>
 
 <div class="row">
+
 <span>Product</span>
-<strong>GST Invoice Template</strong>
+
+<strong id="checkoutProduct">
+GST Invoice Template
+</strong>
+
 </div>
 
 <div class="row">
+
 <span>Regular Price</span>
-<span>₹99</span>
+
+<span id="checkoutRegular">
+₹99
+</span>
+
 </div>
 
 <div class="row">
+
 <span>Discount</span>
-<span>-₹60</span>
+
+<span id="checkoutDiscount">
+-₹60
+</span>
+
 </div>
 
 <div class="row">
+
 <strong>Total</strong>
-<strong>₹39</strong>
+
+<strong id="checkoutTotal">
+₹39
+</strong>
+
 </div>
 
 <h3>Your Details</h3>
 
-<input id="name" type="text" placeholder="Full Name">
+<input
+id="name"
+type="text"
+placeholder="Full Name"
+>
 
-<input id="email" type="email" placeholder="Email">
+<input
+id="email"
+type="email"
+placeholder="Email"
+>
 
-<input id="mobile" type="tel" placeholder="Mobile Number">
+<input
+id="mobile"
+type="tel"
+placeholder="Mobile Number"
+>
 
 <button onclick="continuePayment()">
 Continue to Payment
 </button>
 
-<button class="secondary" onclick="showPage(1)">
+<button
+class="secondary"
+onclick="showPage(1)"
+>
 Back to Home
 </button>
 
@@ -269,34 +346,51 @@ Back to Home
 
 
 <!-- PAYMENT -->
+
 <div id="page3" class="page">
 
 <div class="header">
+
 <h1>Payment</h1>
+
 <p>Secure Demo Payment</p>
+
 </div>
 
 <div class="card">
 
 <h2>Payment Amount</h2>
 
-<div class="price">₹39</div>
+<div
+class="price"
+id="paymentAmount"
+>
+₹39
+</div>
 
 <p>
-अभी testing के लिए ₹39 रखा गया है।
-Final launch पर यही ₹39 रहेगा।
+अभी testing के लिए demo payment रखा गया है।
+Final launch पर Cashfree/payment gateway जोड़ा जाएगा।
 </p>
 
 <div class="order">
-<strong>UPI ID</strong><br>
+
+<strong>UPI ID</strong>
+
+<br>
+
 7976081397@ybl
+
 </div>
 
 <button onclick="paymentSuccess()">
-I Have Paid ₹39
+I Have Paid
 </button>
 
-<button class="secondary" onclick="showPage(2)">
+<button
+class="secondary"
+onclick="showPage(2)"
+>
 Back
 </button>
 
@@ -306,10 +400,13 @@ Back
 
 
 <!-- SUCCESS -->
+
 <div id="page4" class="page">
 
 <div class="header">
+
 <h1>Payment Successful</h1>
+
 </div>
 
 <div class="card">
@@ -321,23 +418,51 @@ Back
 <div class="order">
 
 <p>
+
 <strong>Order ID:</strong>
+
 <span id="orderId"></span>
+
 </p>
 
 <p>
+
 <strong>Name:</strong>
+
 <span id="successName"></span>
+
 </p>
 
 <p>
+
 <strong>Email:</strong>
+
 <span id="successEmail"></span>
+
 </p>
 
 <p>
+
 <strong>Mobile:</strong>
+
 <span id="successMobile"></span>
+
+</p>
+
+<p>
+
+<strong>Product:</strong>
+
+<span id="successProduct"></span>
+
+</p>
+
+<p>
+
+<strong>Amount:</strong>
+
+<span id="successAmount"></span>
+
 </p>
 
 </div>
@@ -346,7 +471,10 @@ Back
 Secure Download
 </button>
 
-<button class="secondary" onclick="showInvoice()">
+<button
+class="secondary"
+onclick="showInvoice()"
+>
 View GST Invoice
 </button>
 
@@ -356,10 +484,13 @@ View GST Invoice
 
 
 <!-- INVOICE -->
+
 <div id="page5" class="page">
 
 <div class="header">
+
 <h1>GST Invoice</h1>
+
 </div>
 
 <div class="card">
@@ -368,48 +499,74 @@ View GST Invoice
 
 <h2>Balaji Digital Hub</h2>
 
-<p><strong>GST Invoice / Purchase Receipt</strong></p>
+<p>
+<strong>GST Invoice / Purchase Receipt</strong>
+</p>
 
 <hr>
 
 <div class="row">
+
 <span>Order ID</span>
+
 <span id="invoiceOrder"></span>
+
 </div>
 
 <div class="row">
+
 <span>Customer Name</span>
+
 <span id="invoiceName"></span>
+
 </div>
 
 <div class="row">
+
 <span>Email</span>
+
 <span id="invoiceEmail"></span>
+
 </div>
 
 <div class="row">
+
 <span>Mobile</span>
+
 <span id="invoiceMobile"></span>
+
 </div>
 
 <div class="row">
+
 <span>Product</span>
-<span>GST Invoice Template</span>
+
+<span id="invoiceProduct"></span>
+
 </div>
 
 <div class="row">
+
 <span>Regular Price</span>
-<span>₹99</span>
+
+<span id="invoiceRegular"></span>
+
 </div>
 
 <div class="row">
+
 <span>Discount</span>
-<span>₹60</span>
+
+<span id="invoiceDiscount"></span>
+
 </div>
 
 <div class="row">
+
 <strong>Paid Amount</strong>
-<strong>₹39</strong>
+
+<strong id="invoiceAmount"></strong>
+
 </div>
 
 <p class="small">
@@ -423,7 +580,10 @@ Actual GST tax breakup will be added in the production version.
 Download Invoice
 </button>
 
-<button class="secondary" onclick="showPage(4)">
+<button
+class="secondary"
+onclick="showPage(4)"
+>
 Back
 </button>
 
@@ -431,104 +591,51 @@ Back
 
 </div>
 
+
+<footer
+style="
+text-align:center;
+padding:20px 10px;
+margin-top:20px;
+color:#666;
+font-size:14px;
+border-top:1px solid #eee;
+"
+>
+
+<strong>Balaji Digital Hub</strong>
+
+<br>
+
+Operated by Rajesh Kumar Sharma
+
+<br>
+
+Digital Products & Services
+
+</footer>
+
 </div>
 
 
-<script>
+<!-- ADMIN PANEL -->
 
-let order="";
+<div
+id="adminPanel"
+class="admin-wrap"
+>
 
-function showPage(page){
-
-document.querySelectorAll(".page").forEach(function(p){
-p.classList.remove("active");
-});
-
-document.getElementById("page"+page).classList.add("active");
-
-window.scrollTo(0,0);
-}
+<h2 style="text-align:center;">
+🔐 Balaji Digital Hub Admin
+</h2>
 
 
-function continuePayment(){
+<!-- ADMIN LOGIN -->
 
-let name=document.getElementById("name").value.trim();
-let email=document.getElementById("email").value.trim();
-let mobile=document.getElementById("mobile").value.trim();
-
-if(name==="" || email==="" || mobile===""){
-alert("Please fill Name, Email and Mobile Number.");
-return;
-}
-
-showPage(3);
-}
-
-
-function paymentSuccess(){
-
-order="BDH-"+Date.now();
-
-document.getElementById("orderId").innerText=order;
-
-document.getElementById("successName").innerText=
-document.getElementById("name").value;
-
-document.getElementById("successEmail").innerText=
-document.getElementById("email").value;
-
-document.getElementById("successMobile").innerText=
-document.getElementById("mobile").value;
-
-showPage(4);
-}
-
-
-function downloadProduct(){
-
-alert("Demo product download started.");
-}
-
-
-function showInvoice(){
-
-document.getElementById("invoiceOrder").innerText=order;
-
-document.getElementById("invoiceName").innerText=
-document.getElementById("name").value;
-
-document.getElementById("invoiceEmail").innerText=
-document.getElementById("email").value;
-
-document.getElementById("invoiceMobile").innerText=
-document.getElementById("mobile").value;
-
-showPage(5);
-}
-
-
-function downloadInvoice(){
-
-alert("Demo GST Invoice download started.");
-}
-
-</script>
-
-<footer style="text-align:center;padding:20px 10px;margin-top:20px;color:#666;font-size:14px;border-top:1px solid #eee;">
-  <strong>Balaji Digital Hub</strong><br>
-  Operated by Rajesh Kumar Sharma<br>
-  Digital Products & Services
-</footer>
-
-
-
-  <!--  ADMIN PANEL - POINT 1A -->
-
-<div id="adminPanel" style="display:none; padding:20px; max-width:600px; margin:auto;">
-
-<h2 style="text-align:center;">🔐 Balaji Digital Hub Admin</h2>
-
-<div id="adminLogin" style="background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px #ccc;">
+<div
+id="adminLogin"
+class="admin-box"
+>
 
 <h3>Admin Login</h3>
 
@@ -536,215 +643,244 @@ alert("Demo GST Invoice download started.");
 id="adminPassword"
 type="password"
 placeholder="Admin Password"
-style="width:100%; padding:12px; margin:10px 0;"
 >
 
-<button
-onclick="adminLogin()"
-style="width:100%; padding:12px;"
->
+<button onclick="adminLogin()">
 Login
 </button>
 
-<p id="adminError" style="color:red;"></p>
+<p
+id="adminError"
+style="color:red;"
+></p>
 
 </div>
 
 
-<div id="adminDashboard" style="display:none;">
+<!-- ADMIN DASHBOARD -->
+
+<div
+id="adminDashboard"
+style="display:none;"
+>
 
 <h3>📊 Admin Dashboard</h3>
 
 
+<!-- DASHBOARD SUMMARY -->
 
-  <!-- ADMIN DASHBOARD SUMMARY -->
+<div class="admin-grid">
 
-<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:15px 0;">
 
-  <div style="background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 8px #ddd;">
-    <b>💰 Sales</b>
-    <h2 style="margin:8px 0;">₹0</h2>
-    <small>This Month</small>
-  </div>
+<div class="admin-stat">
 
-  <div style="background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 8px #ddd;">
-    <b>🛒 Orders</b>
-    <h2 style="margin:8px 0;">0</h2>
-    <small>This Month</small>
-  </div>
+<b>💰 Sales</b>
 
-  <div style="background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 8px #ddd;">
-    <b>👥 Customers</b>
-    <h2 style="margin:8px 0;">0</h2>
-    <small>Total Customers</small>
-  </div>
+<h2 id="statSales">
+₹0
+</h2>
 
-  <div style="background:#fff; padding:15px; border-radius:12px; box-shadow:0 2px 8px #ddd;">
-    <b>👁️ Website Visits</b>
-    <h2 style="margin:8px 0;">0</h2>
-    <small>Total Visits</small>
-  </div>
+<small>
+This Month
+</small>
 
 </div>
 
-<div style="background:#fff; padding:15px; border-radius:12px; margin:15px 0; box-shadow:0 2px 8px #ddd;">
-  <b>📊 Revenue Overview</b>
-  <p style="margin-bottom:0;">
-    Today: ₹0 &nbsp; | &nbsp;
-    This Month: ₹0 &nbsp; | &nbsp;
-    This Year: ₹0
-  </p>
+
+<div class="admin-stat">
+
+<b>🛒 Orders</b>
+
+<h2 id="statOrders">
+0
+</h2>
+
+<small>
+This Month
+</small>
+
 </div>
 
-<div style="background:#fff; padding:15px; border-radius:12px; margin:15px 0; box-shadow:0 2px 8px #ddd;">
-  <b>🔔 Admin Alerts</b>
-  <p style="margin-bottom:0;">
-    No new alerts
-  </p>
+
+<div class="admin-stat">
+
+<b>👥 Customers</b>
+
+<h2 id="statCustomers">
+0
+</h2>
+
+<small>
+Total Customers
+</small>
+
 </div>
 
-<div style="background:#fff;padding:15px;margin-bottom:15px;border-radius:10px;">
-<b>📦 Products Management</b>
 
-<div style="margin-top:12px;">
-<input id="productName" placeholder="Product Name"
-style="width:100%;padding:10px;margin-bottom:8px;">
+<div class="admin-stat">
 
-<input id="regularPrice" type="number" placeholder="Regular Price"
-style="width:100%;padding:10px;margin-bottom:8px;">
+<b>👁️ Website Visits</b>
 
-<input id="offerPrice" type="number" placeholder="Offer Price"
-style="width:100%;padding:10px;margin-bottom:8px;">
+<h2 id="statVisits">
+0
+</h2>
 
-<button onclick="addProduct()"
-style="padding:10px 15px;border:0;border-radius:6px;">
+<small>
+Total Visits
+</small>
+
+</div>
+
+
+</div>
+
+
+<!-- REVENUE -->
+
+<div class="admin-box">
+
+<b>
+📊 Revenue Overview
+</b>
+
+<p>
+
+Today:
+<strong id="revToday">
+₹0
+</strong>
+
+&nbsp; | &nbsp;
+
+This Month:
+<strong id="revMonth">
+₹0
+</strong>
+
+&nbsp; | &nbsp;
+
+This Year:
+<strong id="revYear">
+₹0
+</strong>
+
+</p>
+
+</div>
+
+
+<!-- ADMIN ALERTS -->
+
+<div class="admin-box">
+
+<b>
+🔔 Admin Alerts
+</b>
+
+<p id="adminAlerts">
+No new alerts
+</p>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<div class="admin-box">
+
+<b>
+📦 Products Management
+</b>
+
+
+<input
+id="productName"
+placeholder="Product Name"
+>
+
+
+<input
+id="regularPrice"
+type="number"
+placeholder="Regular Price"
+>
+
+
+<input
+id="offerPrice"
+type="number"
+placeholder="Offer Price"
+>
+
+
+<button onclick="addProduct()">
 ➕ Add Product
 </button>
+
+
+<div
+id="productList"
+style="margin-top:15px;"
+></div>
+
 </div>
 
-<div id="productList" style="margin-top:15px;"></div>
-</div>
 
-<script>
-let products = JSON.parse(localStorage.getItem("balajiProducts") || "[]");
+<!-- CUSTOMERS -->
 
-function saveProducts(){
-localStorage.setItem("balajiProducts", JSON.stringify(products));
-}
+<div class="admin-box">
 
-function addProduct(){
-let name = document.getElementById("productName").value.trim();
-let regular = document.getElementById("regularPrice").value;
-let offer = document.getElementById("offerPrice").value;
+<b>
+👥 Customers
+</b>
 
-if(!name || !regular || !offer){
-alert("Please fill all product details.");
-return;
-}
-
-products.push({
-id: Date.now(),
-name:name,
-regular:regular,
-offer:offer,
-active:true
-});
-
-saveProducts();
-
-document.getElementById("productName").value="";
-document.getElementById("regularPrice").value="";
-document.getElementById("offerPrice").value="";
-
-showProducts();
-}
-
-function editProduct(id){
-let p = products.find(x => x.id === id);
-
-let name = prompt("Product Name:", p.name);
-if(name === null) return;
-
-let regular = prompt("Regular Price:", p.regular);
-if(regular === null) return;
-
-let offer = prompt("Offer Price:", p.offer);
-if(offer === null) return;
-
-p.name = name;
-p.regular = regular;
-p.offer = offer;
-
-saveProducts();
-showProducts();
-}
-
-function toggleProduct(id){
-let p = products.find(x => x.id === id);
-p.active = !p.active;
-
-saveProducts();
-showProducts();
-}
-
-function deleteProduct(id){
-if(!confirm("Delete this product?")) return;
-
-products = products.filter(x => x.id !== id);
-
-saveProducts();
-showProducts();
-}
-
-function showProducts(){
-let box = document.getElementById("productList");
-
-if(products.length === 0){
-box.innerHTML =
-"<p style='color:#666;'>No products added yet.</p>";
-return;
-}
-
-box.innerHTML = products.map(p => `
-<div style="border:1px solid #ddd;padding:12px;margin-top:10px;border-radius:8px;">
-<b>${p.name}</b><br>
-Regular Price: ₹${p.regular}<br>
-Offer Price: ₹${p.offer}<br>
-Status: ${p.active ? "✅ Active" : "⛔ Inactive"}
-
-<div style="margin-top:8px;">
-<button onclick="editProduct(${p.id})">✏️ Edit</button>
-<button onclick="toggleProduct(${p.id})">
-${p.active ? "⛔ Disable" : "✅ Activate"}
-</button>
-<button onclick="deleteProduct(${p.id})">🗑️ Delete</button>
-</div>
-</div>
-`).join("");
-}
-
-showProducts();
-</script>
-
-<div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
-<b>Customers</b>
-<p>Customer Management — Coming Next</p>
-</div>
-
-<div style="background:#fff; padding:15px; margin:10px 0; border-radius:10px;">
-<b>Orders & Sales</b>
-<p>Orders & Sales — Coming Next</p>
-</div>
-<div style="background:#fff; padding:15px; margin-bottom:15px; border-radius:10px;">
-<b>📊 Reports & Analytics</b>
-<p style="margin-bottom:0;">
-Sales Reports, Revenue, Orders, Customers & Website Visits – Coming Next
-</p>
-</div>
-<button
-onclick="adminLogout()"
-style="width:100%; padding:12px;"
+<div
+id="customerList"
+class="muted"
 >
+No customers yet.
+</div>
+
+</div>
+
+
+<!-- ORDERS -->
+
+<div class="admin-box">
+
+<b>
+🛒 Orders & Sales
+</b>
+
+<div
+id="orderList"
+class="muted"
+>
+No orders yet.
+</div>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div class="admin-box">
+
+<b>
+📊 Reports & Analytics
+</b>
+
+<p
+id="reportText"
+class="muted"
+>
+No sales data yet.
+</p>
+
+</div>
+
+
+<button onclick="adminLogout()">
 Logout
 </button>
 
@@ -755,20 +891,1293 @@ Logout
 
 <script>
 
+let products =
+JSON.parse(
+localStorage.getItem("balajiProducts") || "[]"
+);
+
+let orders =
+JSON.parse(
+localStorage.getItem("balajiOrders") || "[]"
+);
+
+let customers =
+JSON.parse(
+localStorage.getItem("balajiCustomers") || "[]"
+);
+
+
+let currentProduct = {
+
+id:"default-gst",
+
+name:"Premium GST Invoice Template",
+
+regular:99,
+
+offer:39
+
+};
+
+
+let order="";
+
+
+function saveProducts(){
+
+localStorage.setItem(
+"balajiProducts",
+JSON.stringify(products)
+);
+
+}
+
+
+function saveOrders(){
+
+localStorage.setItem(
+"balajiOrders",
+JSON.stringify(orders)
+);
+
+}
+
+
+function saveCustomers(){
+
+localStorage.setItem(
+"balajiCustomers",
+JSON.stringify(customers)
+);
+
+}
+
+
+function showPage(page){
+
+document
+.querySelectorAll(".page")
+.forEach(function(p){
+
+p.classList.remove("active");
+
+});
+
+
+let target =
+document.getElementById("page"+page);
+
+
+if(target){
+
+target.classList.add("active");
+
+}
+
+
+window.scrollTo(0,0);
+
+}
+
+
+function buyProduct(id){
+
+if(id === "default-gst"){
+
+currentProduct = {
+
+id:"default-gst",
+
+name:"Premium GST Invoice Template",
+
+regular:99,
+
+offer:39
+
+};
+
+}
+
+else{
+
+let p =
+products.find(
+x => String(x.id) === String(id)
+);
+
+if(!p || !p.active){
+
+return;
+
+}
+
+
+currentProduct = {
+
+id:p.id,
+
+name:p.name,
+
+regular:Number(p.regular),
+
+offer:Number(p.offer)
+
+};
+
+}
+
+
+document.getElementById(
+"checkoutProduct"
+).innerText =
+currentProduct.name;
+
+
+document.getElementById(
+"checkoutRegular"
+).innerText =
+"₹"+currentProduct.regular;
+
+
+let discount =
+currentProduct.regular -
+currentProduct.offer;
+
+
+document.getElementById(
+"checkoutDiscount"
+).innerText =
+"-₹"+discount;
+
+
+document.getElementById(
+"checkoutTotal"
+).innerText =
+"₹"+currentProduct.offer;
+
+
+document.getElementById(
+"paymentAmount"
+).innerText =
+"₹"+currentProduct.offer;
+
+
+showPage(2);
+
+}
+
+
+function continuePayment(){
+
+let name =
+document
+.getElementById("name")
+.value
+.trim();
+
+
+let email =
+document
+.getElementById("email")
+.value
+.trim();
+
+
+let mobile =
+document
+.getElementById("mobile")
+.value
+.trim();
+
+
+if(
+name==="" ||
+email==="" ||
+mobile===""
+){
+
+alert(
+"Please fill Name, Email and Mobile Number."
+);
+
+return;
+
+}
+
+
+showPage(3);
+
+}
+
+
+function paymentSuccess(){
+
+order =
+"BDH-"+Date.now();
+
+
+let customer = {
+
+name:
+document
+.getElementById("name")
+.value
+.trim(),
+
+email:
+document
+.getElementById("email")
+.value
+.trim(),
+
+mobile:
+document
+.getElementById("mobile")
+.value
+.trim()
+
+};
+
+
+let orderData = {
+
+id:order,
+
+date:
+new Date().toISOString(),
+
+name:customer.name,
+
+email:customer.email,
+
+mobile:customer.mobile,
+
+product:currentProduct.name,
+
+productId:currentProduct.id,
+
+regular:Number(
+currentProduct.regular
+),
+
+offer:Number(
+currentProduct.offer
+),
+
+status:"Paid (Demo)"
+
+};
+
+
+orders.push(orderData);
+
+saveOrders();
+
+
+let existing =
+customers.find(
+c =>
+c.email.toLowerCase() ===
+customer.email.toLowerCase()
+);
+
+
+if(existing){
+
+existing.name =
+customer.name;
+
+existing.mobile =
+customer.mobile;
+
+existing.lastOrder =
+order;
+
+}
+
+else{
+
+customers.push({
+
+id:Date.now(),
+
+name:customer.name,
+
+email:customer.email,
+
+mobile:customer.mobile,
+
+lastOrder:order
+
+});
+
+}
+
+
+saveCustomers();
+
+
+document.getElementById(
+"orderId"
+).innerText=order;
+
+
+document.getElementById(
+"successName"
+).innerText=
+customer.name;
+
+
+document.getElementById(
+"successEmail"
+).innerText=
+customer.email;
+
+
+document.getElementById(
+"successMobile"
+).innerText=
+customer.mobile;
+
+
+document.getElementById(
+"successProduct"
+).innerText=
+currentProduct.name;
+
+
+document.getElementById(
+"successAmount"
+).innerText=
+"₹"+currentProduct.offer;
+
+
+showPage(4);
+
+}
+
+
+function downloadProduct(){
+
+alert(
+"Demo product download started."
+);
+
+}
+
+
+function showInvoice(){
+
+document.getElementById(
+"invoiceOrder"
+).innerText=order;
+
+
+document.getElementById(
+"invoiceName"
+).innerText=
+document.getElementById("name")
+.value;
+
+
+document.getElementById(
+"invoiceEmail"
+).innerText=
+document.getElementById("email")
+.value;
+
+
+document.getElementById(
+"invoiceMobile"
+).innerText=
+document.getElementById("mobile")
+.value;
+
+
+document.getElementById(
+"invoiceProduct"
+).innerText=
+currentProduct.name;
+
+
+document.getElementById(
+"invoiceRegular"
+).innerText=
+"₹"+currentProduct.regular;
+
+
+document.getElementById(
+"invoiceDiscount"
+).innerText=
+"₹"+
+(
+currentProduct.regular -
+currentProduct.offer
+);
+
+
+document.getElementById(
+"invoiceAmount"
+).innerText=
+"₹"+currentProduct.offer;
+
+
+showPage(5);
+
+}
+
+
+function downloadInvoice(){
+
+alert(
+"Demo GST Invoice download started."
+);
+
+}
+
+
+function escapeHtml(value){
+
+return String(value)
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+function showAdminProductsOnHome(){
+
+let box =
+document.getElementById(
+"adminProductsOnHome"
+);
+
+
+let activeProducts =
+products.filter(
+p => p.active
+);
+
+
+if(
+activeProducts.length===0
+){
+
+box.innerHTML="";
+
+return;
+
+}
+
+
+box.innerHTML =
+activeProducts
+.map(function(p){
+
+return `
+
+<div class="card">
+
+<h2>
+${escapeHtml(p.name)}
+</h2>
+
+<p>
+
+<span class="old">
+₹${escapeHtml(p.regular)}
+</span>
+
+<span class="price">
+₹${escapeHtml(p.offer)}
+</span>
+
+</p>
+
+<p class="offer">
+🔥 Launch Offer
+</p>
+
+<button
+onclick="buyProduct('${String(p.id).replace(/'/g,"\\'") }')"
+>
+Buy Now
+</button>
+
+</div>
+
+`;
+
+})
+.join("");
+
+}
+
+
+function updateAnnouncement(){
+
+let box =
+document.getElementById(
+"announcementBar"
+);
+
+
+if(products.length===0){
+
+box.innerHTML="";
+
+return;
+
+}
+
+
+let latest =
+products[products.length-1];
+
+
+if(
+!latest ||
+!latest.active
+){
+
+box.innerHTML="";
+
+return;
+
+}
+
+
+box.innerHTML = `
+
+<div class="announcement">
+
+🔔 New Product / Offer:
+${escapeHtml(latest.name)}
+— अब ₹${escapeHtml(latest.offer)}
+में उपलब्ध है
+
+</div>
+
+`;
+
+}
+
+
+function addProduct(){
+
+let name =
+document
+.getElementById("productName")
+.value
+.trim();
+
+
+let regular =
+document.getElementById(
+"regularPrice"
+).value;
+
+
+let offer =
+document.getElementById(
+"offerPrice"
+).value;
+
+
+if(
+!name ||
+!regular ||
+!offer
+){
+
+alert(
+"Please fill all product details."
+);
+
+return;
+
+}
+
+
+if(
+Number(offer) >
+Number(regular)
+){
+
+alert(
+"Offer Price regular price se zyada nahi ho sakta."
+);
+
+return;
+
+}
+
+
+products.push({
+
+id:Date.now(),
+
+name:name,
+
+regular:Number(regular),
+
+offer:Number(offer),
+
+active:true
+
+});
+
+
+saveProducts();
+
+
+document.getElementById(
+"productName"
+).value="";
+
+
+document.getElementById(
+"regularPrice"
+).value="";
+
+
+document.getElementById(
+"offerPrice"
+).value="";
+
+
+showProducts();
+
+showAdminProductsOnHome();
+
+updateAnnouncement();
+
+updateAdminData();
+
+
+alert(
+"Product added successfully."
+);
+
+}
+
+
+function editProduct(id){
+
+let p =
+products.find(
+x => String(x.id) === String(id)
+);
+
+
+if(!p){
+
+return;
+
+}
+
+
+let name =
+prompt(
+"Product Name:",
+p.name
+);
+
+
+if(name===null){
+
+return;
+
+}
+
+
+name=name.trim();
+
+
+if(!name){
+
+return;
+
+}
+
+
+let regular =
+prompt(
+"Regular Price:",
+p.regular
+);
+
+
+if(regular===null){
+
+return;
+
+}
+
+
+let offer =
+prompt(
+"Offer Price:",
+p.offer
+);
+
+
+if(offer===null){
+
+return;
+
+}
+
+
+if(
+Number(regular)<=0 ||
+Number(offer)<=0 ||
+Number(offer)>Number(regular)
+){
+
+alert(
+"Please enter valid prices."
+);
+
+return;
+
+}
+
+
+p.name=name;
+
+p.regular=Number(regular);
+
+p.offer=Number(offer);
+
+
+saveProducts();
+
+showProducts();
+
+showAdminProductsOnHome();
+
+updateAnnouncement();
+
+updateAdminData();
+
+}
+
+
+function toggleProduct(id){
+
+let p =
+products.find(
+x => String(x.id) === String(id)
+);
+
+
+if(!p){
+
+return;
+
+}
+
+
+p.active=!p.active;
+
+
+saveProducts();
+
+showProducts();
+
+showAdminProductsOnHome();
+
+updateAnnouncement();
+
+updateAdminData();
+
+}
+
+
+function deleteProduct(id){
+
+if(
+!confirm(
+"Delete this product?"
+)
+){
+
+return;
+
+}
+
+
+products =
+products.filter(
+x =>
+String(x.id) !== String(id)
+);
+
+
+saveProducts();
+
+showProducts();
+
+showAdminProductsOnHome();
+
+updateAnnouncement();
+
+updateAdminData();
+
+}
+
+
+function showProducts(){
+
+let box =
+document.getElementById(
+"productList"
+);
+
+
+if(
+products.length===0
+){
+
+box.innerHTML =
+"<p class='muted'>No products added yet.</p>";
+
+return;
+
+}
+
+
+box.innerHTML =
+products.map(
+p => `
+
+<div class="product-admin">
+
+<b>
+${escapeHtml(p.name)}
+</b>
+
+<br>
+
+Regular Price:
+₹${escapeHtml(p.regular)}
+
+<br>
+
+Offer Price:
+₹${escapeHtml(p.offer)}
+
+<br>
+
+Status:
+${p.active ? "✅ Active" : "⛔ Inactive"}
+
+<div style="margin-top:8px;">
+
+<button
+class="admin-btn"
+onclick="editProduct('${String(p.id)}')"
+>
+✏️ Edit
+</button>
+
+<button
+class="admin-btn ${p.active ? "" : "success-btn"}"
+onclick="toggleProduct('${String(p.id)}')"
+>
+${p.active ? "⛔ Disable" : "✅ Activate"}
+</button>
+
+<button
+class="admin-btn danger"
+onclick="deleteProduct('${String(p.id)}')"
+>
+🗑️ Delete
+</button>
+
+</div>
+
+</div>
+
+`
+)
+.join("");
+
+}
+
+
+function updateAdminData(){
+
+let now =
+new Date();
+
+
+let month =
+now.getMonth();
+
+
+let year =
+now.getFullYear();
+
+
+let monthOrders =
+orders.filter(
+o => {
+
+let d =
+new Date(o.date);
+
+return
+d.getMonth()===month &&
+d.getFullYear()===year;
+
+}
+);
+
+
+let sales =
+monthOrders.reduce(
+(sum,o) =>
+sum + Number(o.offer||0),
+0
+);
+
+
+let todayOrders =
+orders.filter(
+o => {
+
+let d =
+new Date(o.date);
+
+return
+d.toDateString() ===
+now.toDateString();
+
+}
+);
+
+
+let todaySales =
+todayOrders.reduce(
+(sum,o) =>
+sum + Number(o.offer||0),
+0
+);
+
+
+let yearOrders =
+orders.filter(
+o =>
+new Date(o.date)
+.getFullYear()===year
+);
+
+
+let yearSales =
+yearOrders.reduce(
+(sum,o) =>
+sum + Number(o.offer||0),
+0
+);
+
+
+document.getElementById(
+"statSales"
+).innerText =
+"₹"+sales;
+
+
+document.getElementById(
+"statOrders"
+).innerText =
+monthOrders.length;
+
+
+document.getElementById(
+"statCustomers"
+).innerText =
+customers.length;
+
+
+document.getElementById(
+"statVisits"
+).innerText =
+localStorage.getItem(
+"balajiVisits"
+) || "0";
+
+
+document.getElementById(
+"revToday"
+).innerText =
+"₹"+todaySales;
+
+
+document.getElementById(
+"revMonth"
+).innerText =
+"₹"+sales;
+
+
+document.getElementById(
+"revYear"
+).innerText =
+"₹"+yearSales;
+
+
+document.getElementById(
+"adminAlerts"
+).innerText =
+
+products.filter(
+p => p.active
+).length+
+
+" active product(s) available.";
+
+
+renderCustomers();
+
+renderOrders();
+
+renderReports();
+
+}
+
+
+function renderCustomers(){
+
+let box =
+document.getElementById(
+"customerList"
+);
+
+
+if(
+customers.length===0
+){
+
+box.innerHTML =
+"No customers yet.";
+
+return;
+
+}
+
+
+box.innerHTML =
+customers.map(
+c => `
+
+<div class="product-admin">
+
+<b>
+${escapeHtml(c.name)}
+</b>
+
+<br>
+
+Email:
+${escapeHtml(c.email)}
+
+<br>
+
+Mobile:
+${escapeHtml(c.mobile)}
+
+<br>
+
+Last Order:
+${escapeHtml(
+c.lastOrder || "-"
+)}
+
+</div>
+
+`
+)
+.join("");
+
+}
+
+
+function renderOrders(){
+
+let box =
+document.getElementById(
+"orderList"
+);
+
+
+if(
+orders.length===0
+){
+
+box.innerHTML =
+"No orders yet.";
+
+return;
+
+}
+
+
+let list =
+[...orders].reverse();
+
+
+box.innerHTML =
+list.map(
+o => `
+
+<div class="product-admin">
+
+<b>
+${escapeHtml(o.id)}
+</b>
+
+<br>
+
+Customer:
+${escapeHtml(o.name)}
+
+<br>
+
+Product:
+${escapeHtml(o.product)}
+
+<br>
+
+Amount:
+₹${escapeHtml(o.offer)}
+
+<br>
+
+Status:
+${escapeHtml(o.status)}
+
+<br>
+
+Date:
+${new Date(
+o.date
+).toLocaleString("en-IN")}
+
+</div>
+
+`
+)
+.join("");
+
+}
+
+
+function renderReports(){
+
+let box =
+document.getElementById(
+"reportText"
+);
+
+
+if(
+orders.length===0
+){
+
+box.innerText =
+"No sales data yet.";
+
+return;
+
+}
+
+
+let total =
+orders.reduce(
+(sum,o) =>
+sum + Number(o.offer||0),
+0
+);
+
+
+box.innerText =
+
+"Total Orders: "+
+orders.length+
+
+" | Total Revenue: ₹"+
+total+
+
+" | Active Products: "+
+products.filter(
+p => p.active
+).length;
+
+}
+
+
 function adminLogin(){
 
 let password =
-document.getElementById("adminPassword").value;
+document.getElementById(
+"adminPassword"
+).value;
 
-if(password === "1234"){
 
-document.getElementById("adminLogin").style.display="none";
+if(
+password==="1234"
+){
 
-document.getElementById("adminDashboard").style.display="block";
+document.getElementById(
+"adminLogin"
+).style.display="none";
 
-}else{
 
-document.getElementById("adminError").innerText =
+document.getElementById(
+"adminDashboard"
+).style.display="block";
+
+
+document.getElementById(
+"adminError"
+).innerText="";
+
+
+showProducts();
+
+updateAdminData();
+
+}
+
+else{
+
+document.getElementById(
+"adminError"
+).innerText =
 "Wrong Admin Password";
 
 }
@@ -778,19 +2187,86 @@ document.getElementById("adminError").innerText =
 
 function adminLogout(){
 
-document.getElementById("adminDashboard").style.display="none";
+document.getElementById(
+"adminDashboard"
+).style.display="none";
 
-document.getElementById("adminLogin").style.display="block";
 
-document.getElementById("adminPassword").value="";
+document.getElementById(
+"adminLogin"
+).style.display="block";
+
+
+document.getElementById(
+"adminPassword"
+).value="";
+
+}
+
+
+function openAdmin(){
+
+document
+.querySelectorAll(".page")
+.forEach(
+function(p){
+
+p.classList.remove(
+"active"
+);
+
+}
+);
+
+
+document.getElementById(
+"adminPanel"
+).style.display="block";
+
+}
+
+
+function countVisit(){
+
+let visits =
+Number(
+localStorage.getItem(
+"balajiVisits"
+) || "0"
+);
+
+
+visits++;
+
+
+localStorage.setItem(
+"balajiVisits",
+String(visits)
+);
+
+}
+
+
+showAdminProductsOnHome();
+
+updateAnnouncement();
+
+countVisit();
+
+
+/* RELIABLE ADMIN URL TRIGGER */
+
+if(
+new URLSearchParams(
+window.location.search
+).has("admin")
+){
+
+openAdmin();
 
 }
 
 </script>
-  <script>
-if (window.location.search === "?admin") {
-    document.getElementById("adminPanel").style.display = "block";
-}
-</script>
+
 </body>
 </html>
