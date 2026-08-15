@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Balaji Digital Hub - V5 Combined Fix Ready - 15 Aug 2026</title>
+<title>Balaji Digital Hub - Backup V5</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;width:100%;overflow-x:hidden}
@@ -122,7 +122,7 @@ select{max-width:100%}
 <div class="admin-box"><b>📦 Products Management</b><input id="productName" placeholder="Product Name"><input id="regularPrice" type="number" min="1" placeholder="Regular Price"><input id="offerPrice" type="number" min="1" placeholder="Offer Price"><button onclick="addProduct()">➕ Add Product</button><div id="productList" style="margin-top:15px"></div></div>
 <div class="admin-box"><b>👥 Customers</b><div id="customerList" class="muted">No customers yet.</div></div>
 <div class="admin-box"><b>🛒 Orders & Sales</b><div id="orderList" class="muted">No orders yet.</div></div>
-<div class="admin-box"><b>💸 Expenses</b><select id="expenseCategory" style="width:100%;padding:13px;margin-top:10px;border:1px solid #ccc;border-radius:9px;font-size:16px"><option value="Marketing">Marketing</option><option value="Payment Gateway">Payment Gateway</option><option value="Refund">Refund</option><option value="Other">Other</option></select><input id="expenseAmount" type="number" min="1" placeholder="Expense Amount"><input id="expenseNote" placeholder="Expense Note"><button onclick="addExpense()">➕ Add Expense</button><div id="expenseList"></div></div>
+<div class="admin-box"><b>💸 Expenses</b><div class="info"><b>Marketing</b>: <span id="marketingExpenseTotal">₹0</span> &nbsp; | &nbsp; <b>Affiliate Commission</b>: <span id="affiliateExpenseTotal">₹0</span></div><select id="expenseCategory" style="width:100%;padding:13px;margin-top:10px;border:1px solid #ccc;border-radius:9px;font-size:16px"><option value="Marketing">Marketing</option><option value="Payment Gateway">Payment Gateway</option><option value="Refund">Refund</option><option value="Other">Other</option></select><input id="expenseAmount" type="number" min="1" placeholder="Expense Amount"><input id="expenseNote" placeholder="Expense Note"><button onclick="addExpense()">➕ Add Expense</button><div id="expenseList"></div></div>
 <div class="admin-box"><b>📊 Reports & Analytics</b>
 <div class="report-period"><h4>Today</h4><p>Gross Sales: <strong id="todayGross">₹0</strong></p><p>Expenses: <strong id="todayExp">₹0</strong></p><p>Net Profit: <strong id="todayProfit">₹0</strong></p></div>
 <div class="report-period"><h4>This Month</h4><p>Gross Sales: <strong id="monthGross">₹0</strong></p><p>Expenses: <strong id="monthExp">₹0</strong></p><p>Net Profit: <strong id="monthProfit">₹0</strong></p></div>
@@ -142,7 +142,6 @@ affiliates:'balajiAffiliates',target:'balajiYearTarget',clean:'bdh_v6_product_cl
 };
 const FINAL_PRODUCT={id:'default-gst',name:'Premium GST Invoice Template',regular:99,offer:79,active:true,system:true};
 if(!localStorage.getItem(KEY.clean)){
-localStorage.removeItem(KEY.products);
 localStorage.setItem(KEY.mainProduct,JSON.stringify(FINAL_PRODUCT));
 localStorage.setItem(KEY.clean,'done');
 }
@@ -154,13 +153,16 @@ let expenses=JSON.parse(localStorage.getItem(KEY.expenses)||'[]');
 let affiliates=JSON.parse(localStorage.getItem(KEY.affiliates)||'[]');
 let yearTarget=Number(localStorage.getItem(KEY.target)||300000);
 let currentProduct={...mainProduct},order='',currentAffiliate=new URLSearchParams(location.search).get('ref')||'';
+let lastOrderData=JSON.parse(sessionStorage.getItem('bdhLastOrder')||'null');
+function saveLastOrder(){sessionStorage.setItem('bdhLastOrder',JSON.stringify(lastOrderData))}
+function getLastOrder(){return lastOrderData||orders.find(o=>String(o.id)===String(order))||null}
 
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const discountAmount=p=>Math.max(0,Number(p.regular||0)-Number(p.offer||0));
 const discountPercent=p=>Number(p.regular)>0?(discountAmount(p)/Number(p.regular))*100:0;
-const formatPercent=p=>{let pct=discountPercent(p);if(Math.abs(pct-20.2020202020202)<0.01)return '20';return pct.toFixed(1).replace(/\.0$/,'')};
-const discountText=p=>money(discountAmount(p))+' OFF | '+formatPercent(p)+'% OFF';
+const displayPercent=p=>{let pct=discountPercent(p);return Math.abs(pct-20.2020202020202)<0.01?'20':pct.toFixed(1).replace(/\.0$/,'')};
+const discountText=p=>money(discountAmount(p))+' OFF | '+displayPercent(p)+'% OFF';
 
 function saveMainProduct(){localStorage.setItem(KEY.mainProduct,JSON.stringify(mainProduct))}
 function saveProducts(){localStorage.setItem(KEY.products,JSON.stringify(products))}
@@ -195,26 +197,33 @@ function paymentSuccess(){
 order='BDH-'+Date.now();
 let c={name:document.getElementById('name').value.trim(),email:document.getElementById('email').value.trim(),mobile:document.getElementById('mobile').value.trim()};
 let affiliateCommission=currentAffiliate?Number((currentProduct.offer*0.20).toFixed(2)):0;
-orders.push({id:order,date:new Date().toISOString(),...c,product:currentProduct.name,productId:currentProduct.id,regular:Number(currentProduct.regular),offer:Number(currentProduct.offer),discount:discountAmount(currentProduct),discountPercent:discountPercent(currentProduct),affiliateCode:currentAffiliate||'',affiliateCommission,status:'Paid (Demo)'});
-saveOrders();
+lastOrderData={id:order,date:new Date().toISOString(),...c,product:currentProduct.name,productId:currentProduct.id,regular:Number(currentProduct.regular),offer:Number(currentProduct.offer),discount:discountAmount(currentProduct),discountPercent:discountPercent(currentProduct),affiliateCode:currentAffiliate||'',affiliateCommission,status:'Paid (Demo)'};
+orders.push({...lastOrderData});
+saveOrders();saveLastOrder();
 let old=customers.find(x=>String(x.email).toLowerCase()===c.email.toLowerCase());
 if(old){old.name=c.name;old.mobile=c.mobile;old.lastOrder=order}else customers.push({id:Date.now(),...c,lastOrder:order});
 saveCustomers();
-document.getElementById('orderId').innerText=order;document.getElementById('successName').innerText=c.name;document.getElementById('successEmail').innerText=c.email;document.getElementById('successMobile').innerText=c.mobile;document.getElementById('successProduct').innerText=currentProduct.name;document.getElementById('successAmount').innerText=money(currentProduct.offer);
+document.getElementById('orderId').innerText=lastOrderData.id;document.getElementById('successName').innerText=lastOrderData.name;document.getElementById('successEmail').innerText=lastOrderData.email;document.getElementById('successMobile').innerText=lastOrderData.mobile;document.getElementById('successProduct').innerText=lastOrderData.product;document.getElementById('successAmount').innerText=money(lastOrderData.offer);
 updateAdminData();showPage(4);
 }
 function downloadProduct(){alert('Secure product delivery will be connected after real payment/download backend is enabled. Paid files are not exposed in this demo.')}
 function showInvoice(){
-document.getElementById('invoiceOrder').innerText=order;document.getElementById('invoiceName').innerText=document.getElementById('name').value;document.getElementById('invoiceEmail').innerText=document.getElementById('email').value;document.getElementById('invoiceMobile').innerText=document.getElementById('mobile').value;document.getElementById('invoiceProduct').innerText=currentProduct.name;document.getElementById('invoiceRegular').innerText=money(currentProduct.regular);document.getElementById('invoiceDiscount').innerText=discountText(currentProduct);document.getElementById('invoiceAmount').innerText=money(currentProduct.offer);showPage(5);
+let o=getLastOrder();
+if(!o)return alert('Order details are not available.');
+order=o.id;
+document.getElementById('invoiceOrder').innerText=o.id;document.getElementById('invoiceName').innerText=o.name;document.getElementById('invoiceEmail').innerText=o.email;document.getElementById('invoiceMobile').innerText=o.mobile;document.getElementById('invoiceProduct').innerText=o.product;document.getElementById('invoiceRegular').innerText=money(o.regular);document.getElementById('invoiceDiscount').innerText=money(o.discount)+' OFF | '+(Math.abs(Number(o.discountPercent)-20.2020202020202)<0.01?'20':Number(o.discountPercent).toFixed(1).replace(/\.0$/,''))+'% OFF';document.getElementById('invoiceAmount').innerText=money(o.offer);showPage(5);
 }
 function downloadInvoice(){
-let rows=[['Order ID',order],['Customer Name',document.getElementById('name').value],['Email',document.getElementById('email').value],['Mobile',document.getElementById('mobile').value],['Product',currentProduct.name],['Regular Price',money(currentProduct.regular)],['Discount',discountText(currentProduct)],['Paid Amount',money(currentProduct.offer)]];
+let o=getLastOrder();
+if(!o)return alert('Order details are not available.');
+let discountTextSaved=money(o.discount)+' OFF | '+(Math.abs(Number(o.discountPercent)-20.2020202020202)<0.01?'20':Number(o.discountPercent).toFixed(1).replace(/\.0$/,''))+'% OFF';
+let rows=[['Order ID',o.id],['Customer Name',o.name],['Email',o.email],['Mobile',o.mobile],['Product',o.product],['Regular Price',money(o.regular)],['Discount',discountTextSaved],['Paid Amount',money(o.offer)]];
 let html='<html><head><meta charset="UTF-8"><title>GST Invoice</title><style>body{font-family:Arial;padding:30px}table{width:100%;border-collapse:collapse}td{padding:10px;border-bottom:1px solid #ddd}</style></head><body><h1>Balaji Digital Hub</h1><h3>GST Invoice / Purchase Receipt</h3><table>'+rows.map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>').join('')+'</table><p>Demo invoice; production GST breakup will be configured later.</p></body></html>';
-let a=document.createElement('a'),u=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.href=u;a.download='GST-Invoice-'+(order||'BDH')+'.html';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);
+let a=document.createElement('a'),u=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.href=u;a.download='GST-Invoice-'+(o.id||'BDH')+'.html';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);
 }
 function renderHome(){
 let a=allProducts().filter(p=>p.active!==false);
-document.getElementById('homeProducts').innerHTML=a.map(p=>'<div class="card"><h2>'+esc(p.name)+'</h2><p><span class="old">'+money(p.regular)+'</span><span class="price">'+money(p.offer)+'</span></p><p class="offer">🔥 Launch Offer: '+esc(money(p.regular))+' → '+esc(money(p.offer))+' | '+esc(discountText(p))+'</p><button onclick="buyProduct(\''+String(p.id).replace(/'/g,"\\'")+'\')">Buy Now</button></div>').join('');
+document.getElementById('homeProducts').innerHTML=a.map(p=>'<div class="card"><h2>'+esc(p.name)+'</h2><p><span class="old">'+money(p.regular)+'</span><span class="price">'+money(p.offer)+'</span></p><p class="offer">🔥 Launch Offer: '+esc(discountText(p))+'</p><button onclick="buyProduct(\''+String(p.id).replace(/'/g,"\\'")+'\')">Buy Now</button></div>').join('');
 document.getElementById('announcementBar').innerHTML=a.length?'<div class="announcement">🔔 Launch Offer: '+a.map(p=>esc(p.name)+' — '+money(p.regular)+' → '+money(p.offer)+' | '+esc(discountText(p))).join(' &nbsp; | &nbsp; ')+' | जल्दी करें!</div>':'';
 }
 function addProduct(){
@@ -262,7 +271,7 @@ if(amount<=0)return alert('Please enter expense amount.');
 expenses.push({id:Date.now(),date:new Date().toISOString(),category,amount,note:note||'-'});saveExpenses();document.getElementById('expenseAmount').value='';document.getElementById('expenseNote').value='';refresh();
 }
 function renderExpenses(){
-let b=document.getElementById('expenseList');if(!expenses.length){b.innerHTML='<p class="muted">No expenses yet.</p>';return}
+let b=document.getElementById('expenseList');let marketing=expenses.filter(e=>e.category==='Marketing').reduce((s,e)=>s+Number(e.amount||0),0);let affiliate=orders.reduce((s,o)=>s+Number(o.affiliateCommission||0),0);document.getElementById('marketingExpenseTotal').innerText=money(marketing);document.getElementById('affiliateExpenseTotal').innerText=money(affiliate);if(!expenses.length){b.innerHTML='<p class="muted">No manual expenses yet.</p>';return}
 b.innerHTML=[...expenses].reverse().map(e=>'<div class="product-admin"><b>'+esc(e.category)+'</b><br>Amount: '+money(e.amount)+'<br>Note: '+esc(e.note)+'<br>Date: '+new Date(e.date).toLocaleString('en-IN')+'</div>').join('');
 }
 function getSalesTotal(list){return list.reduce((s,o)=>s+Number(o.offer||0),0)}
@@ -275,10 +284,11 @@ let yearOrders=orders.filter(o=>new Date(o.date).getFullYear()===y);
 let todayExp=expenses.filter(e=>new Date(e.date).toDateString()===today);
 let monthExp=expenses.filter(e=>{let d=new Date(e.date);return d.getFullYear()===y&&d.getMonth()===m});
 let yearExp=expenses.filter(e=>new Date(e.date).getFullYear()===y);
+let commissionTotal=list=>list.reduce((s,o)=>s+Number(o.affiliateCommission||0),0);
 return{
-today:{sales:getSalesTotal(todayOrders),exp:getExpenseTotal(todayExp)},
-month:{sales:getSalesTotal(monthOrders),exp:getExpenseTotal(monthExp)},
-year:{sales:getSalesTotal(yearOrders),exp:getExpenseTotal(yearExp)}
+today:{sales:getSalesTotal(todayOrders),exp:getExpenseTotal(todayExp)+commissionTotal(todayOrders)},
+month:{sales:getSalesTotal(monthOrders),exp:getExpenseTotal(monthExp)+commissionTotal(monthOrders)},
+year:{sales:getSalesTotal(yearOrders),exp:getExpenseTotal(yearExp)+commissionTotal(yearOrders)}
 };
 }
 function setPeriod(prefix,d){
@@ -336,7 +346,7 @@ if(document.getElementById('adminPassword').value==='1234'){document.getElementB
 function adminLogout(){document.getElementById('adminDashboard').style.display='none';document.getElementById('adminLogin').style.display='block';document.getElementById('adminPassword').value=''}
 function openAdmin(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('adminPanel').style.display='block'}
 function refresh(){renderHome();showProducts();updateAffiliateStats();updateAdminData()}
-let visits=Number(localStorage.getItem(KEY.visits)||0)+1;localStorage.setItem(KEY.visits,String(visits));refresh();if(new URLSearchParams(location.search).has('admin'))openAdmin();
+let visits=Number(localStorage.getItem(KEY.visits)||0)+1;localStorage.setItem(KEY.visits,String(visits));if(lastOrderData){order=lastOrderData.id}refresh();if(new URLSearchParams(location.search).has('admin'))openAdmin();
 </script>
 </body>
 </html>
