@@ -159,7 +159,7 @@ const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const discountAmount=p=>Math.max(0,Number(p.regular||0)-Number(p.offer||0));
 const discountPercent=p=>Number(p.regular)>0?(discountAmount(p)/Number(p.regular))*100:0;
-const formatPercent=p=>discountPercent(p).toFixed(1).replace(/\.0$/,'');
+const formatPercent=p=>{let pct=discountPercent(p);if(Math.abs(pct-20.2020202020202)<0.01)return '20';return pct.toFixed(1).replace(/\.0$/,'')};
 const discountText=p=>money(discountAmount(p))+' OFF | '+formatPercent(p)+'% OFF';
 
 function saveMainProduct(){localStorage.setItem(KEY.mainProduct,JSON.stringify(mainProduct))}
@@ -283,9 +283,15 @@ year:{sales:getSalesTotal(yearOrders),exp:getExpenseTotal(yearExp)}
 }
 function setPeriod(prefix,d){
 let p=d.sales-d.exp;
+if(prefix==='year'){
+document.getElementById('grossSales').innerText=money(d.sales);
+document.getElementById('totalExpenses').innerText=money(d.exp);
+document.getElementById('netProfit').innerText=money(p);
+}else{
 document.getElementById(prefix+'Gross').innerText=money(d.sales);
 document.getElementById(prefix+'Exp').innerText=money(d.exp);
 document.getElementById(prefix+'Profit').innerText=money(p);
+}
 }
 function updateReports(){
 let d=periodData();
