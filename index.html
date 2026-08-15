@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Balaji Digital Hub - Backup V5</title>
+<title>Balaji Digital Hub - V5 Combined Fix Ready - 15 Aug 2026</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;width:100%;overflow-x:hidden}
@@ -159,7 +159,8 @@ const money=n=>'₹'+Number(n||0).toLocaleString('en-IN');
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const discountAmount=p=>Math.max(0,Number(p.regular||0)-Number(p.offer||0));
 const discountPercent=p=>Number(p.regular)>0?(discountAmount(p)/Number(p.regular))*100:0;
-const discountText=p=>money(discountAmount(p))+' OFF | '+discountPercent(p).toFixed(1).replace(/\.0$/,'')+'% OFF';
+const formatPercent=p=>discountPercent(p).toFixed(1).replace(/\.0$/,'');
+const discountText=p=>money(discountAmount(p))+' OFF | '+formatPercent(p)+'% OFF';
 
 function saveMainProduct(){localStorage.setItem(KEY.mainProduct,JSON.stringify(mainProduct))}
 function saveProducts(){localStorage.setItem(KEY.products,JSON.stringify(products))}
@@ -213,7 +214,7 @@ let a=document.createElement('a'),u=URL.createObjectURL(new Blob([html],{type:'t
 }
 function renderHome(){
 let a=allProducts().filter(p=>p.active!==false);
-document.getElementById('homeProducts').innerHTML=a.map(p=>'<div class="card"><h2>'+esc(p.name)+'</h2><p><span class="old">'+money(p.regular)+'</span><span class="price">'+money(p.offer)+'</span></p><p class="offer">🔥 Launch Offer: '+esc(discountText(p))+'</p><button onclick="buyProduct(\''+String(p.id).replace(/'/g,"\\'")+'\')">Buy Now</button></div>').join('');
+document.getElementById('homeProducts').innerHTML=a.map(p=>'<div class="card"><h2>'+esc(p.name)+'</h2><p><span class="old">'+money(p.regular)+'</span><span class="price">'+money(p.offer)+'</span></p><p class="offer">🔥 Launch Offer: '+esc(money(p.regular))+' → '+esc(money(p.offer))+' | '+esc(discountText(p))+'</p><button onclick="buyProduct(\''+String(p.id).replace(/'/g,"\\'")+'\')">Buy Now</button></div>').join('');
 document.getElementById('announcementBar').innerHTML=a.length?'<div class="announcement">🔔 Launch Offer: '+a.map(p=>esc(p.name)+' — '+money(p.regular)+' → '+money(p.offer)+' | '+esc(discountText(p))).join(' &nbsp; | &nbsp; ')+' | जल्दी करें!</div>':'';
 }
 function addProduct(){
