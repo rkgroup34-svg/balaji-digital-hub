@@ -358,7 +358,7 @@ if(document.getElementById('adminPassword').value==='1234'){document.getElementB
 function adminLogout(){document.getElementById('adminDashboard').style.display='none';document.getElementById('adminLogin').style.display='block';document.getElementById('adminPassword').value=''}
 function openAdmin(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('adminPanel').style.display='block'}
 function refresh(){renderHome();showProducts();updateAffiliateStats();updateAdminData()}
-let vif(!new URLSearchParams(location.search).has('admin')){let visits=Number(localStorage.getItem(KEY.visits)||0)+1;localStorage.setItem(KEY.visits,String(visits));}if(lastOrderData){order=lastOrderData.id}refresh();if(new URLSearchParams(location.search).has('admin'))openAdmin();
+if(!new URLSearchParams(location.search).has('admin')){let visits=Number(localStorage.getItem(KEY.visits)||0)+1;localStorage.setItem(KEY.visits,String(visits));}if(lastOrderData){order=lastOrderData.id}refresh();if(new URLSearchParams(location.search).has('admin'))openAdmin();
 </script>
 </body>
 </html>
