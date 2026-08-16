@@ -131,7 +131,8 @@ select{max-width:100%}
 </div>
 <div class="admin-box"><b>🤝 Affiliate System</b><p class="muted">Customer Discount: Product-wise<br>Affiliate Commission: 20% of sale price</p><input id="affiliateName" placeholder="Affiliate Name"><input id="affiliateCode" placeholder="Unique Affiliate Code"><button onclick="addAffiliate()">➕ Add Affiliate</button><div id="affiliateList"></div></div>
 <div class="admin-box"><b>📈 Quick Report</b><div class="report-period"><h4>Today</h4><p id="quickToday">Gross Sales: ₹0 | Expenses: ₹0 | Net Profit: ₹0</p></div><div class="report-period"><h4>This Month</h4><p id="quickMonth">Gross Sales: ₹0 | Expenses: ₹0 | Net Profit: ₹0</p></div><div class="report-period"><h4>This Year</h4><p id="quickYear">Gross Sales: ₹0 | Expenses: ₹0 | Net Profit: ₹0</p></div></div>
-<button class="secondary" onclick="adminLogout()">Logout</button>
+<button class="danger" onclick="resetTestData()">🧹 Reset Test Data</button>
+<button class="secondary" onclick="adminLogout()">Logout</button>8
 </div></div>
 
 <script>
@@ -339,6 +340,17 @@ let d=periodData();
 document.getElementById('quickToday').innerText='Gross Sales: '+money(d.today.sales)+' | Expenses: '+money(d.today.exp)+' | Net Profit: '+money(d.today.sales-d.today.exp);
 document.getElementById('quickMonth').innerText='Gross Sales: '+money(d.month.sales)+' | Expenses: '+money(d.month.exp)+' | Net Profit: '+money(d.month.sales-d.month.exp);
 document.getElementById('quickYear').innerText='Gross Sales: '+money(d.year.sales)+' | Expenses: '+money(d.year.exp)+' | Net Profit: '+money(d.year.sales-d.year.exp);
+}
+  function resetTestData(){
+  if(!confirm('Reset all test data? Products will not be deleted.'))return;
+  localStorage.removeItem(KEY.customers);
+  localStorage.removeItem(KEY.orders);
+  localStorage.removeItem(KEY.expenses);
+  localStorage.removeItem(KEY.affiliates);
+  localStorage.removeItem(KEY.visits);
+  if(KEY.lastOrder)localStorage.removeItem(KEY.lastOrder);
+  alert('Test data reset successfully.');
+  location.reload();
 }
 function adminLogin(){
 if(document.getElementById('adminPassword').value==='1234'){document.getElementById('adminLogin').style.display='none';document.getElementById('adminDashboard').style.display='block';document.getElementById('adminError').innerText='';refresh()}else document.getElementById('adminError').innerText='Wrong Admin Password';
