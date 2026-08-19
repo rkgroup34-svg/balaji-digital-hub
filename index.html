@@ -46,11 +46,30 @@ input,select{width:100%;padding:13px;margin-top:10px;border:1px solid #ccc;borde
 .row span,.row strong{display:block;margin-bottom:4px}
 }
 @media print{
-body>*{display:none!important}
-.print-area{display:block!important}
-.print-area .invoice{margin:0;border:0}
-.print-area button{display:none}
+  body *{
+    visibility:hidden!important;
+  }
+
+  #invoicePrint,
+  #invoicePrint *{
+    visibility:visible!important;
+  }
+
+  #invoicePrint{
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    width:100%!important;
+    margin:0!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  #invoicePrint button{
+    display:none!important;
+  }
 }
+  
 </style>
 </head>
 
